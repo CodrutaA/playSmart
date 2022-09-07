@@ -1,0 +1,644 @@
+{
+	"info": {
+		"_postman_id": "f85dd48f-adb3-4b34-959c-b5134fc3ccae",
+		"name": "restful-booker",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "CreateToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc33282f-7a98-4503-be32-f605ebc7a832",
+								"exec": [
+									"if(pm.info.iteration === 0){\r",
+									"    pm.test(\"Successful POST request\", function () {\r",
+									"        pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Status code is OK\", function () {\r",
+									"        pm.response.to.have.status(\"OK\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type is present\", function () {\r",
+									"        pm.response.to.have.header(\"Content-Type\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type header is application/json\", () => {\r",
+									"        pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8');\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    const responseJson = pm.response.json();\r",
+									"    \r",
+									"    token = responseJson.token;\r",
+									"    pm.environment.set(\"environmet_token\",token);\r",
+									"    console.log(\"Token is: \" + token);\r",
+									"    // ___________________________________________________________________\r",
+									"    const schema = {\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\": {\r",
+									"            \"token\": {\r",
+									"            \"type\": \"string\"\r",
+									"            }\r",
+									"        },\r",
+									"        \"additionalProperties\": false,\r",
+									"        \"required\": [\r",
+									"            \"token\"\r",
+									"        ]\r",
+									"        };\r",
+									"    \r",
+									"    pm.test(\"Validating schema\",() => { \r",
+									"        pm.response.to.have.jsonSchema(schema);\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "ea7132a4-9d3a-4487-b25f-8100439fb271",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\" : \"{{username}}\",\r\n    \"password\" : \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/auth",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "c82cd044-2d6f-4b3c-8870-22c3e48049e7"
+		},
+		{
+			"name": "Booking",
+			"item": [
+				{
+					"name": "getBookingIds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2a1ea61e-85ec-41e6-859e-0a8ff9474970",
+								"exec": [
+									"if(pm.info.iteration === 0){\r",
+									"    pm.test(\"Successful GET request\", function () {\r",
+									"        pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Status code is OK\", function () {\r",
+									"        pm.response.to.have.status(\"OK\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type is present\", function () {\r",
+									"        pm.response.to.have.header(\"Content-Type\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type header is application/json\", () => {\r",
+									"        pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8');\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    tests[\"Number of bookings: \"  + responseJson.length] = true;\r",
+									"        for(i = 0; i < responseJson.length; i++){    \r",
+									"            const booking = responseJson[i];\r",
+									"            pm.test(`Booking ${i} is present into the list`, () => {\r",
+									"                pm.expect(booking.bookingid).is.not.null;\r",
+									"            });\r",
+									"        }\r",
+									"    // ___________________________________________________________________\r",
+									"    const schema = {\r",
+									"        \"type\": \"array\",\r",
+									"        \"items\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"properties\": {\r",
+									"            \"bookingid\": {\r",
+									"                \"type\": \"integer\"\r",
+									"            }\r",
+									"            },\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"required\": [\r",
+									"            \"bookingid\"\r",
+									"            ]\r",
+									"        },\r",
+									"        \"additionalItems\": false\r",
+									"        };\r",
+									"    \r",
+									"    pm.test(\"Validating schema\",() => { \r",
+									"        pm.response.to.have.jsonSchema(schema);\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    // _______________________ZONE FOR SAVING VARIABLES___________________\r",
+									"    bookingID_first = responseJson[0].bookingid;\r",
+									"    pm.globals.set(\"global_bookingID_first\", bookingID_first);\r",
+									"    console.log(\"First Booking ID is: \" + bookingID_first);\r",
+									"    // ___________________________________________________________________\r",
+									"    bookingID_second = responseJson[1].bookingid;\r",
+									"    pm.globals.set(\"global_bookingID_second\", bookingID_second);\r",
+									"    console.log(\"Second Booking ID is: \" + bookingID_second);\r",
+									"    // ___________________________________________________________________\r",
+									"    bookingID_third = responseJson[3].bookingid;\r",
+									"    pm.globals.set(\"global_bookingID_third\", bookingID_third);\r",
+									"    console.log(\"Third Booking ID is: \" + bookingID_third);\r",
+									"    // ___________________________________________________________________\r",
+									"    bookings_array = [bookingID_first, bookingID_second, bookingID_third];\r",
+									"    pm.globals.set(\"global_bookings_array\", JSON.stringify(bookings_array));\r",
+									"    console.log(\"Booking array: \" + bookings_array);\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.globals.set('global_idIndex', 0);\r",
+									"    // ___________________________________________________________________\r",
+									"\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "6fc31bcd-afaa-414f-a561-130ab36b83b1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{environmet_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/booking",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9a8cb1bc-b49a-4933-8ac0-4621676b28d8",
+								"exec": [
+									"let data_booking = pm.globals.get(\"global_booking\");\r",
+									"let data_booking_first = pm.globals.get(\"global_bookingID_first\");\r",
+									"let data_booking_second = pm.globals.get(\"global_bookingID_second\");\r",
+									"let data_booking_third = pm.globals.get(\"global_bookingID_third\");\r",
+									"\r",
+									"if(pm.info.iteration === 0){\r",
+									"    pm.test(\"Successful GET request\", function () {\r",
+									"        pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Status code is OK\", function () {\r",
+									"        pm.response.to.have.status(\"OK\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type is present\", function () {\r",
+									"        pm.response.to.have.header(\"Content-Type\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type header is application/json\", () => {\r",
+									"        pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8');\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.test(`All booking details are present into the list`, () => {\r",
+									"        pm.expect(responseJson.firstname).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"firstname\");\r",
+									"\r",
+									"        pm.expect(responseJson.lastname).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"lastname\");\r",
+									"\r",
+									"        pm.expect(responseJson.totalprice).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"totalprice\");\r",
+									"\r",
+									"        pm.expect(responseJson.depositpaid).is.oneOf([true, false]);\r",
+									"        pm.expect(responseJson).has.property(\"depositpaid\");\r",
+									"\r",
+									"        pm.expect(responseJson.bookingdates).is.not.null;\r",
+									"        pm.expect(responseJson.bookingdates.checkin).is.not.null;\r",
+									"        pm.expect(responseJson.bookingdates.checkout).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"bookingdates\");\r",
+									"        pm.expect(responseJson.bookingdates).has.property(\"checkin\");\r",
+									"        pm.expect(responseJson.bookingdates).has.property(\"checkout\");\r",
+									"\r",
+									"        pm.expect(responseJson.additionalneeds).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"additionalneeds\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    const schema = {\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\": {\r",
+									"            \"firstname\": {\r",
+									"            \"type\": \"string\"\r",
+									"            },\r",
+									"            \"lastname\": {\r",
+									"            \"type\": \"string\"\r",
+									"            },\r",
+									"            \"totalprice\": {\r",
+									"            \"type\": \"integer\"\r",
+									"            },\r",
+									"            \"depositpaid\": {\r",
+									"            \"type\": \"boolean\"\r",
+									"            },\r",
+									"            \"bookingdates\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"properties\": {\r",
+									"                \"checkin\": {\r",
+									"                \"type\": \"string\"\r",
+									"                },\r",
+									"                \"checkout\": {\r",
+									"                \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"required\": [\r",
+									"                \"checkin\",\r",
+									"                \"checkout\"\r",
+									"            ]\r",
+									"            },\r",
+									"            \"additionalneeds\": {\r",
+									"            \"type\": \"string\"\r",
+									"            }\r",
+									"        },\r",
+									"        \"additionalProperties\": false,\r",
+									"        \"required\": [\r",
+									"            \"firstname\",\r",
+									"            \"lastname\",\r",
+									"            \"totalprice\",\r",
+									"            \"depositpaid\",\r",
+									"            \"bookingdates\",\r",
+									"            \"additionalneeds\"\r",
+									"        ]\r",
+									"        };\r",
+									"    \r",
+									"    pm.test(\"Validating schema\",() => { \r",
+									"        pm.response.to.have.jsonSchema(schema);\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    // _______________________ZONE FOR SAVING VARIABLES___________________\r",
+									"    if(data_booking == data_booking_first){\r",
+									"        firstname = responseJson.firstname;\r",
+									"        pm.globals.set(\"global_booking_firstname\", firstname);\r",
+									"        console.log(\"Booking first name is: \" + firstname);\r",
+									"    } else if(data_booking == data_booking_second){\r",
+									"        lastname = responseJson.lastname;\r",
+									"        pm.globals.set(\"global_booking_lastname\", lastname);\r",
+									"        console.log(\"Booking last name is: \" + lastname);\r",
+									"    } else if(data_booking == data_booking_third){\r",
+									"        totalprice = responseJson.totalprice;\r",
+									"        pm.globals.set(\"global_booking_totalprice\", totalprice);\r",
+									"        console.log(\"Booking total price is: \" + totalprice);\r",
+									"    }\r",
+									"    // ___________________________________________________________________\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f9049b0f-caeb-4a7d-ab4d-db7ffa1d3df0",
+								"exec": [
+									"const bookings = JSON.parse(pm.globals.get('global_bookings_array'));\r",
+									"let bookingIndex = pm.globals.get('global_idIndex');\r",
+									"\r",
+									"const booking = bookings[bookingIndex];\r",
+									"pm.globals.set('global_booking', booking);\r",
+									"console.log(`Current booking: ${booking}`);\r",
+									"\r",
+									"if (bookingIndex < bookings.length-1){  \r",
+									"    bookingIndex++;  \r",
+									"    pm.globals.set('global_idIndex', bookingIndex);\r",
+									"    postman.setNextRequest(pm.info.requestId);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "7623daad-aa9c-4f28-82c9-b4d6d34940a6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{environmet_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/booking/{{global_booking}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"booking",
+								"{{global_booking}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "postBookingCreate",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3b6c83b9-6260-467d-b0fc-7a0334ded78a",
+								"exec": [
+									"const currentDate = require('moment');\r",
+									"let today = currentDate();\r",
+									"today = today.format(\"YYYY-MM-DD\");\r",
+									"\r",
+									"let tomorrow = currentDate().add(1, \"day\");\r",
+									"tomorrow = tomorrow.format(\"YYYY-MM-DD\");\r",
+									"\r",
+									"data_firstname = pm.globals.get(\"global_booking_firstname\");\r",
+									"data_lastname = pm.globals.get(\"global_booking_lastname\");\r",
+									"data_totalprice = pm.globals.get(\"global_booking_totalprice\");\r",
+									"data_depositpaid = true;\r",
+									"data_checkin = today;\r",
+									"data_checkout = tomorrow;\r",
+									"data_additionalneeds = \"Launch\";\r",
+									"\r",
+									"let booking = {};\r",
+									"let firstname = data_firstname;\r",
+									"booking.firstname = firstname;\r",
+									"\r",
+									"let lastname = data_lastname;\r",
+									"booking.lastname = lastname;\r",
+									"\r",
+									"let totalprice = data_totalprice;\r",
+									"booking.totalprice = totalprice;\r",
+									"\r",
+									"let depositpaid = data_depositpaid;\r",
+									"booking.depositpaid = depositpaid;\r",
+									"\r",
+									"let bookingdates = {};\r",
+									"let checkin = data_checkin;\r",
+									"let checkout = data_checkout;\r",
+									"bookingdates.checkin = checkin;\r",
+									"bookingdates.checkout = checkout;\r",
+									"\r",
+									"booking.bookingdates = bookingdates;\r",
+									"\r",
+									"let additionalneeds = data_additionalneeds;\r",
+									"booking.additionalneeds = additionalneeds;\r",
+									"\r",
+									"bookingDetails = JSON.stringify(booking,null,2)\r",
+									"console.log(bookingDetails);\r",
+									"pm.globals.set(\"global_createBooking\", bookingDetails);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "09625977-3e49-4af2-8fb9-5f9a431c2781",
+								"exec": [
+									"let data_booking = pm.globals.get(\"global_booking\");\r",
+									"let data_booking_first = pm.globals.get(\"global_bookingID_first\");\r",
+									"let data_booking_second = pm.globals.get(\"global_bookingID_second\");\r",
+									"let data_booking_third = pm.globals.get(\"global_bookingID_third\");\r",
+									"\r",
+									"if(pm.info.iteration === 0){\r",
+									"    pm.test(\"Successful GET request\", function () {\r",
+									"        pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Status code is OK\", function () {\r",
+									"        pm.response.to.have.status(\"OK\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type is present\", function () {\r",
+									"        pm.response.to.have.header(\"Content-Type\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type header is application/json\", () => {\r",
+									"        pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8');\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.test(`All booking details are present into the list`, () => {\r",
+									"        pm.expect(responseJson.bookingid).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"bookingid\");\r",
+									"\r",
+									"        pm.expect(responseJson.booking).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"booking\");\r",
+									"\r",
+									"        pm.expect(responseJson.booking.firstname).is.not.null;\r",
+									"        pm.expect(responseJson.booking).has.property(\"firstname\");\r",
+									"\r",
+									"        pm.expect(responseJson.booking.lastname).is.not.null;\r",
+									"        pm.expect(responseJson.booking).has.property(\"lastname\");\r",
+									"\r",
+									"        pm.expect(responseJson.booking.totalprice).is.not.null;\r",
+									"        pm.expect(responseJson.booking).has.property(\"totalprice\");\r",
+									"\r",
+									"        pm.expect(responseJson.booking.depositpaid).is.oneOf([true, false]);\r",
+									"        pm.expect(responseJson.booking).has.property(\"depositpaid\");\r",
+									"\r",
+									"        pm.expect(responseJson.booking.bookingdates).is.not.null;\r",
+									"        pm.expect(responseJson.booking.bookingdates.checkin).is.not.null;\r",
+									"        pm.expect(responseJson.booking.bookingdates.checkout).is.not.null;\r",
+									"        pm.expect(responseJson.booking).has.property(\"bookingdates\");\r",
+									"        pm.expect(responseJson.booking.bookingdates).has.property(\"checkin\");\r",
+									"        pm.expect(responseJson.booking.bookingdates).has.property(\"checkout\");\r",
+									"\r",
+									"        pm.expect(responseJson.booking.additionalneeds).is.not.null;\r",
+									"        pm.expect(responseJson.booking).has.property(\"additionalneeds\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    const schema = {\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\": {\r",
+									"            \"bookingid\": {\r",
+									"            \"type\": \"integer\"\r",
+									"            },\r",
+									"            \"booking\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"properties\": {\r",
+									"                \"firstname\": {\r",
+									"                \"type\": \"string\"\r",
+									"                },\r",
+									"                \"lastname\": {\r",
+									"                \"type\": \"string\"\r",
+									"                },\r",
+									"                \"totalprice\": {\r",
+									"                \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"depositpaid\": {\r",
+									"                \"type\": \"boolean\"\r",
+									"                },\r",
+									"                \"bookingdates\": {\r",
+									"                \"type\": \"object\",\r",
+									"                \"properties\": {\r",
+									"                    \"checkin\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                    },\r",
+									"                    \"checkout\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                    }\r",
+									"                },\r",
+									"                \"additionalProperties\": false,\r",
+									"                \"required\": [\r",
+									"                    \"checkin\",\r",
+									"                    \"checkout\"\r",
+									"                ]\r",
+									"                },\r",
+									"                \"additionalneeds\": {\r",
+									"                \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"required\": [\r",
+									"                \"firstname\",\r",
+									"                \"lastname\",\r",
+									"                \"totalprice\",\r",
+									"                \"depositpaid\",\r",
+									"                \"bookingdates\",\r",
+									"                \"additionalneeds\"\r",
+									"            ]\r",
+									"            }\r",
+									"        },\r",
+									"        \"additionalProperties\": false,\r",
+									"        \"required\": [\r",
+									"            \"bookingid\",\r",
+									"            \"booking\"\r",
+									"        ]\r",
+									"        };\r",
+									"    \r",
+									"    pm.test(\"Validating schema\",() => { \r",
+									"        pm.response.to.have.jsonSchema(schema);\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    // _______________________ZONE FOR SAVING VARIABLES___________________\r",
+									"        bookingID = responseJson.bookingid;\r",
+									"        pm.globals.set(\"global_booking_creationID\", bookingID);\r",
+									"        console.log(\"Booking creation ID is: \" + bookingID);\r",
+									"    // ___________________________________________________________________\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "edcfe71d-0b3e-4e36-83f4-9bce41cea398",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{environmet_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{global_createBooking}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/booking",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "5384176c-335a-4b56-8c04-1c55a4fa7745"
+		},
+		{
+			"name": "Ping",
+			"item": [],
+			"id": "65506d90-7064-4e32-bb5b-3b4d0f91de38"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "96e14841-d5e0-46f2-a772-88e9e0093839",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "8d5aa781-614e-4805-b22a-e8450ffcf568",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
