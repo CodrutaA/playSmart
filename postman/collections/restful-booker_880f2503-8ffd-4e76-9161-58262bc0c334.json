@@ -9,7 +9,7 @@
 			"name": "Auth",
 			"item": [
 				{
-					"name": "CreateToken",
+					"name": "postCreateToken",
 					"event": [
 						{
 							"listen": "test",
@@ -86,7 +86,8 @@
 							"path": [
 								"auth"
 							]
-						}
+						},
+						"description": "StartFragment\n\nCreates a new auth token to use for access to the PUT and DELETE /booking\n\nEndFragment"
 					},
 					"response": []
 				}
@@ -203,7 +204,8 @@
 							"path": [
 								"booking"
 							]
-						}
+						},
+						"description": "StartFragment\n\nReturns the ids of all the bookings that exist within the API. Can take optional query strings to search and return a subset of booking ids.  \n\nEnd"
 					},
 					"response": []
 				},
@@ -381,7 +383,8 @@
 								"booking",
 								"{{global_booking}}"
 							]
-						}
+						},
+						"description": "StartFragment\n\nReturns a specific booking based upon the booking id provided."
 					},
 					"response": []
 				},
@@ -444,13 +447,8 @@
 							"script": {
 								"id": "09625977-3e49-4af2-8fb9-5f9a431c2781",
 								"exec": [
-									"let data_booking = pm.globals.get(\"global_booking\");\r",
-									"let data_booking_first = pm.globals.get(\"global_bookingID_first\");\r",
-									"let data_booking_second = pm.globals.get(\"global_bookingID_second\");\r",
-									"let data_booking_third = pm.globals.get(\"global_bookingID_third\");\r",
-									"\r",
 									"if(pm.info.iteration === 0){\r",
-									"    pm.test(\"Successful GET request\", function () {\r",
+									"    pm.test(\"Successful POST request\", function () {\r",
 									"        pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
 									"    });\r",
 									"    // ___________________________________________________________________\r",
@@ -606,7 +604,440 @@
 							"path": [
 								"booking"
 							]
+						},
+						"description": "StartFragment\n\nCreates a new booking in the API."
+					},
+					"response": []
+				},
+				{
+					"name": "putBookingUpdate",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d8403042-4ae1-466a-b33d-09637992ce82",
+								"exec": [
+									"const currentDate = require('moment');\r",
+									"\r",
+									"let tomorrow = currentDate().add(1, \"day\");\r",
+									"tomorrow = tomorrow.format(\"YYYY-MM-DD\");\r",
+									"\r",
+									"let year = currentDate().add(1, \"year\");\r",
+									"year = year.format(\"YYYY-MM-DD\");\r",
+									"\r",
+									"data_firstname = pm.globals.get(\"global_booking_firstname\");\r",
+									"data_firstname = data_firstname + \"Updated\";\r",
+									"data_lastname = pm.globals.get(\"global_booking_lastname\");\r",
+									"data_lastname = data_lastname + \"Updated\";\r",
+									"data_totalprice = pm.globals.get(\"global_booking_totalprice\");\r",
+									"data_totalprice = data_totalprice + 1890;\r",
+									"data_depositpaid = true;\r",
+									"data_checkin = tomorrow;\r",
+									"data_checkout = year;\r",
+									"data_additionalneeds = \"LaunchBreak\";\r",
+									"\r",
+									"let booking = {};\r",
+									"let firstname = data_firstname;\r",
+									"booking.firstname = firstname;\r",
+									"\r",
+									"let lastname = data_lastname;\r",
+									"booking.lastname = lastname;\r",
+									"\r",
+									"let totalprice = data_totalprice;\r",
+									"booking.totalprice = totalprice;\r",
+									"\r",
+									"let depositpaid = data_depositpaid;\r",
+									"booking.depositpaid = depositpaid;\r",
+									"\r",
+									"let bookingdates = {};\r",
+									"let checkin = data_checkin;\r",
+									"let checkout = data_checkout;\r",
+									"bookingdates.checkin = checkin;\r",
+									"bookingdates.checkout = checkout;\r",
+									"\r",
+									"booking.bookingdates = bookingdates;\r",
+									"\r",
+									"let additionalneeds = data_additionalneeds;\r",
+									"booking.additionalneeds = additionalneeds;\r",
+									"\r",
+									"bookingDetails = JSON.stringify(booking,null,2)\r",
+									"console.log(bookingDetails);\r",
+									"pm.globals.set(\"global_updateBooking\", bookingDetails);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "ab70d757-6365-4054-9068-338b143361b7",
+								"exec": [
+									"if(pm.info.iteration === 0){\r",
+									"    pm.test(\"Successful PUT request\", function () {\r",
+									"        pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Status code is OK\", function () {\r",
+									"        pm.response.to.have.status(\"OK\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type is present\", function () {\r",
+									"        pm.response.to.have.header(\"Content-Type\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type header is application/json\", () => {\r",
+									"        pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8');\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.test(`All booking details are present into the list`, () => {\r",
+									"        pm.expect(responseJson.firstname).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"firstname\");\r",
+									"\r",
+									"        pm.expect(responseJson.lastname).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"lastname\");\r",
+									"\r",
+									"        pm.expect(responseJson.totalprice).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"totalprice\");\r",
+									"\r",
+									"        pm.expect(responseJson.depositpaid).is.oneOf([true, false]);\r",
+									"        pm.expect(responseJson).has.property(\"depositpaid\");\r",
+									"\r",
+									"        pm.expect(responseJson.bookingdates).is.not.null;\r",
+									"        pm.expect(responseJson.bookingdates.checkin).is.not.null;\r",
+									"        pm.expect(responseJson.bookingdates.checkout).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"bookingdates\");\r",
+									"        pm.expect(responseJson.bookingdates).has.property(\"checkin\");\r",
+									"        pm.expect(responseJson.bookingdates).has.property(\"checkout\");\r",
+									"\r",
+									"        pm.expect(responseJson.additionalneeds).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"additionalneeds\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    const schema = {\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\": {\r",
+									"            \"firstname\": {\r",
+									"            \"type\": \"string\"\r",
+									"            },\r",
+									"            \"lastname\": {\r",
+									"            \"type\": \"string\"\r",
+									"            },\r",
+									"            \"totalprice\": {\r",
+									"            \"type\": \"integer\"\r",
+									"            },\r",
+									"            \"depositpaid\": {\r",
+									"            \"type\": \"boolean\"\r",
+									"            },\r",
+									"            \"bookingdates\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"properties\": {\r",
+									"                \"checkin\": {\r",
+									"                \"type\": \"string\"\r",
+									"                },\r",
+									"                \"checkout\": {\r",
+									"                \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"required\": [\r",
+									"                \"checkin\",\r",
+									"                \"checkout\"\r",
+									"            ]\r",
+									"            },\r",
+									"            \"additionalneeds\": {\r",
+									"            \"type\": \"string\"\r",
+									"            }\r",
+									"        },\r",
+									"        \"additionalProperties\": false,\r",
+									"        \"required\": [\r",
+									"            \"firstname\",\r",
+									"            \"lastname\",\r",
+									"            \"totalprice\",\r",
+									"            \"depositpaid\",\r",
+									"            \"bookingdates\",\r",
+									"            \"additionalneeds\"\r",
+									"        ]\r",
+									"        };\r",
+									"    \r",
+									"    pm.test(\"Validating schema\",() => { \r",
+									"        pm.response.to.have.jsonSchema(schema);\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
 						}
+					],
+					"id": "cd6bfd2e-8134-4257-96d5-afd89648c4d8",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{global_updateBooking}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/booking/{{global_booking_creationID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"booking",
+								"{{global_booking_creationID}}"
+							]
+						},
+						"description": "StartFragment\n\nUpdates a current booking.\n\n  \n\nEndFra"
+					},
+					"response": []
+				},
+				{
+					"name": "patchBookingPartialUpdate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "29288797-3020-4c5a-ac69-2ebd3bd9cb50",
+								"exec": [
+									"if(pm.info.iteration === 0){\r",
+									"    pm.test(\"Successful PATCH request\", function () {\r",
+									"        pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Status code is OK\", function () {\r",
+									"        pm.response.to.have.status(\"OK\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type is present\", function () {\r",
+									"        pm.response.to.have.header(\"Content-Type\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type header is application/json\", () => {\r",
+									"        pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8');\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.test(`All booking details are present into the list`, () => {\r",
+									"        pm.expect(responseJson.firstname).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"firstname\");\r",
+									"\r",
+									"        pm.expect(responseJson.lastname).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"lastname\");\r",
+									"\r",
+									"        pm.expect(responseJson.totalprice).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"totalprice\");\r",
+									"\r",
+									"        pm.expect(responseJson.depositpaid).is.oneOf([true, false]);\r",
+									"        pm.expect(responseJson).has.property(\"depositpaid\");\r",
+									"\r",
+									"        pm.expect(responseJson.bookingdates).is.not.null;\r",
+									"        pm.expect(responseJson.bookingdates.checkin).is.not.null;\r",
+									"        pm.expect(responseJson.bookingdates.checkout).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"bookingdates\");\r",
+									"        pm.expect(responseJson.bookingdates).has.property(\"checkin\");\r",
+									"        pm.expect(responseJson.bookingdates).has.property(\"checkout\");\r",
+									"\r",
+									"        pm.expect(responseJson.additionalneeds).is.not.null;\r",
+									"        pm.expect(responseJson).has.property(\"additionalneeds\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    const schema = {\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\": {\r",
+									"            \"firstname\": {\r",
+									"            \"type\": \"string\"\r",
+									"            },\r",
+									"            \"lastname\": {\r",
+									"            \"type\": \"string\"\r",
+									"            },\r",
+									"            \"totalprice\": {\r",
+									"            \"type\": \"integer\"\r",
+									"            },\r",
+									"            \"depositpaid\": {\r",
+									"            \"type\": \"boolean\"\r",
+									"            },\r",
+									"            \"bookingdates\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"properties\": {\r",
+									"                \"checkin\": {\r",
+									"                \"type\": \"string\"\r",
+									"                },\r",
+									"                \"checkout\": {\r",
+									"                \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"required\": [\r",
+									"                \"checkin\",\r",
+									"                \"checkout\"\r",
+									"            ]\r",
+									"            },\r",
+									"            \"additionalneeds\": {\r",
+									"            \"type\": \"string\"\r",
+									"            }\r",
+									"        },\r",
+									"        \"additionalProperties\": false,\r",
+									"        \"required\": [\r",
+									"            \"firstname\",\r",
+									"            \"lastname\",\r",
+									"            \"totalprice\",\r",
+									"            \"depositpaid\",\r",
+									"            \"bookingdates\",\r",
+									"            \"additionalneeds\"\r",
+									"        ]\r",
+									"        };\r",
+									"    \r",
+									"    pm.test(\"Validating schema\",() => { \r",
+									"        pm.response.to.have.jsonSchema(schema);\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "e7d5a25f-94ba-42bd-b357-24d9116d6eb3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"James\",\r\n    \"lastname\" : \"Brown\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/booking/{{global_booking_creationID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"booking",
+								"{{global_booking_creationID}}"
+							]
+						},
+						"description": "StartFragment\n\nUpdates a current booking with a partial payload.\n\n  \n\nEndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "deleteBookingDelete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "66a42b5b-87be-4d14-9867-f189c455a90d",
+								"exec": [
+									"if(pm.info.iteration === 0){\r",
+									"    pm.test(\"Successful DELETE request\", function () {\r",
+									"        pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Status code is Created\", function () {\r",
+									"        pm.response.to.have.status(\"Created\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type is present\", function () {\r",
+									"        pm.response.to.have.header(\"Content-Type\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type header is application/json\", () => {\r",
+									"        pm.expect(pm.response.headers.get('Content-Type')).to.eql('text/plain; charset=utf-8');\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    const responseText = pm.response.text();\r",
+									"\r",
+									"    pm.test(\"Check if status method is Created\", () => {\r",
+									"        pm.expect(responseText).to.eql(\"Created\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "c4b6c792-91e3-431e-9f86-615989592ed6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/booking/{{global_booking_creationID}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"booking",
+								"{{global_booking_creationID}}"
+							]
+						},
+						"description": "StartFragment\n\nReturns the ids of all the bookings that exist within the API. Can take optional query strings to search and return a subset of booking ids.\n\n  \n\nEndFragment"
 					},
 					"response": []
 				}
@@ -615,7 +1046,65 @@
 		},
 		{
 			"name": "Ping",
-			"item": [],
+			"item": [
+				{
+					"name": "getHealthCheck",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "324f0291-876f-4b6d-8fcb-b82b917fccf2",
+								"exec": [
+									"if(pm.info.iteration === 0){\r",
+									"    pm.test(\"Successful GET request\", function () {\r",
+									"        pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Status code is Created\", function () {\r",
+									"        pm.response.to.have.status(\"Created\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type is present\", function () {\r",
+									"        pm.response.to.have.header(\"Content-Type\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    pm.test(\"Content-Type header is application/json\", () => {\r",
+									"        pm.expect(pm.response.headers.get('Content-Type')).to.eql('text/plain; charset=utf-8');\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"    const responseText = pm.response.text();\r",
+									"\r",
+									"    pm.test(\"Check if status method is Created\", () => {\r",
+									"        pm.expect(responseText).to.eql(\"Created\");\r",
+									"    });\r",
+									"    // ___________________________________________________________________\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "bc209976-3662-441e-aa63-92ae68e125b4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/ping",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"ping"
+							]
+						},
+						"description": "StartFragment\n\nA simple health check endpoint to confirm whether the API is up and running.\n\n  \n\nEndFragment"
+					},
+					"response": []
+				}
+			],
 			"id": "65506d90-7064-4e32-bb5b-3b4d0f91de38"
 		}
 	],
