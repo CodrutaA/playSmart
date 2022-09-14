@@ -17,12 +17,9 @@ jobs:
     steps:
       - run: |
               npm install newman
-              displayName: 'Install Newman'
 
       - run: |
               npm install -g newman-reporter-htmlextra
-              displayName: 'Install Newman HTML Extra Reporter'
 
       - run: |
               newman run -x "postman/collections/restful-booker_880f2503-8ffd-4e76-9161-58262bc0c334.json" -e "postman/schemas/PlaySmart Environment 1.0.0.postman_environment.json" --reporters junit --reporter-junit-export Results\junitReport.xml --bail
-              displayName: 'Run PlaySmart collection'
