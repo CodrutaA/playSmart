@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "8249132b-3135-484d-81f4-9402d60b56f0",
+		"_postman_id": "d683b868-3100-4d99-a144-a96bcd8a1c4e",
 		"name": "restful-booker",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_uid": "13903415-8249132b-3135-484d-81f4-9402d60b56f0"
+		"_uid": "13903415-d683b868-3100-4d99-a144-a96bcd8a1c4e"
 	},
 	"item": [
 		{
@@ -15,7 +15,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "aaff5e57-347b-47de-883f-edbd0d683c27",
+								"id": "cc33282f-7a98-4503-be32-f605ebc7a832",
 								"exec": [
 									"if(pm.info.iteration === 0){\r",
 									"    pm.test(\"Successful POST request\", function () {\r",
@@ -63,7 +63,7 @@
 							}
 						}
 					],
-					"id": "8cea33aa-6c14-461f-860b-805958e7ba96",
+					"id": "591c6dd0-6a0c-4010-98a8-d2e9325bbbb1",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -93,7 +93,7 @@
 					"response": []
 				}
 			],
-			"id": "0bdd687b-0577-4d25-9eb4-14c85081e4b0"
+			"id": "e36f03f3-2645-447c-8770-ff0b3990e121"
 		},
 		{
 			"name": "Booking",
@@ -104,7 +104,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "06cc5f66-b1d6-4f0b-b6e6-e281760740ec",
+								"id": "2a1ea61e-85ec-41e6-859e-0a8ff9474970",
 								"exec": [
 									"if(pm.info.iteration === 0){\r",
 									"    pm.test(\"Successful GET request\", function () {\r",
@@ -180,7 +180,7 @@
 							}
 						}
 					],
-					"id": "25a2fef7-5fc5-4d56-bbf7-c7457c2eb4b6",
+					"id": "a97452f3-4cbc-484b-af01-2670602c8b22",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -216,7 +216,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "48034a53-c3cb-41c4-ace6-e39e6421d99f",
+								"id": "9a8cb1bc-b49a-4933-8ac0-4621676b28d8",
 								"exec": [
 									"let data_booking = pm.globals.get(\"global_booking\");\r",
 									"let data_booking_first = pm.globals.get(\"global_bookingID_first\");\r",
@@ -339,7 +339,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "1c0d2e70-40ff-485d-826c-0e8ec6dfe259",
+								"id": "f9049b0f-caeb-4a7d-ab4d-db7ffa1d3df0",
 								"exec": [
 									"const bookings = JSON.parse(pm.globals.get('global_bookings_array'));\r",
 									"let bookingIndex = pm.globals.get('global_idIndex');\r",
@@ -358,7 +358,7 @@
 							}
 						}
 					],
-					"id": "4a991463-0256-466b-b2aa-ce1cf0aeb649",
+					"id": "77367820-a416-4b9c-a9bc-40d05fcece5c",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -395,7 +395,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "6ea64a2c-7336-47ff-a78b-594bdbe40cb1",
+								"id": "3b6c83b9-6260-467d-b0fc-7a0334ded78a",
 								"exec": [
 									"const currentDate = require('moment');\r",
 									"let today = currentDate();\r",
@@ -446,7 +446,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "30a09906-81d8-4e47-bfd4-b99f0014084f",
+								"id": "09625977-3e49-4af2-8fb9-5f9a431c2781",
 								"exec": [
 									"if(pm.info.iteration === 0){\r",
 									"    pm.test(\"Successful POST request\", function () {\r",
@@ -571,7 +571,7 @@
 							}
 						}
 					],
-					"id": "ec8b233b-9938-49f7-a90a-6e3258b46df8",
+					"id": "41900e96-cd3a-49a1-b37b-b73e90db82b8",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -616,7 +616,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "afd5566e-2437-42cf-8fb4-94a97c56452e",
+								"id": "d8403042-4ae1-466a-b33d-09637992ce82",
 								"exec": [
 									"const currentDate = require('moment');\r",
 									"\r",
@@ -671,7 +671,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "d9604e04-cc13-4689-ac85-8c5792313676",
+								"id": "ab70d757-6365-4054-9068-338b143361b7",
 								"exec": [
 									"if(pm.info.iteration === 0){\r",
 									"    pm.test(\"Successful PUT request\", function () {\r",
@@ -772,7 +772,7 @@
 							}
 						}
 					],
-					"id": "41720f74-7d78-48ee-b617-4441dd27e5f8",
+					"id": "ca73a044-1144-4bb0-a028-6a37d5471e42",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -823,7 +823,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "8a0644ef-b89f-4ec5-b5f9-75be5b6322e5",
+								"id": "29288797-3020-4c5a-ac69-2ebd3bd9cb50",
 								"exec": [
 									"if(pm.info.iteration === 0){\r",
 									"    pm.test(\"Successful PATCH request\", function () {\r",
@@ -924,7 +924,7 @@
 							}
 						}
 					],
-					"id": "8c40c0e8-2233-4ee9-9236-e61592a92de6",
+					"id": "3a1fa4ba-e1a8-49e9-bd36-4beb1f3a10c1",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -975,7 +975,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0842e715-a43f-476c-bd48-cb54d179bb3b",
+								"id": "66a42b5b-87be-4d14-9867-f189c455a90d",
 								"exec": [
 									"if(pm.info.iteration === 0){\r",
 									"    pm.test(\"Successful DELETE request\", function () {\r",
@@ -1006,7 +1006,7 @@
 							}
 						}
 					],
-					"id": "b1f290b7-9fa3-4007-8f8f-ff7a3c05ca38",
+					"id": "78212019-3338-483b-81e8-616b2df61192",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1043,7 +1043,7 @@
 					"response": []
 				}
 			],
-			"id": "13256b22-c53d-4909-91e4-a0bcfab4d9fb"
+			"id": "7f1bc644-f0b1-4757-b205-01ed5739eaac"
 		},
 		{
 			"name": "Ping",
@@ -1054,7 +1054,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9ad52239-22b1-41ab-ba01-c205dff8d06d",
+								"id": "324f0291-876f-4b6d-8fcb-b82b917fccf2",
 								"exec": [
 									"if(pm.info.iteration === 0){\r",
 									"    pm.test(\"Successful GET request\", function () {\r",
@@ -1085,7 +1085,7 @@
 							}
 						}
 					],
-					"id": "8f2eecb8-a56c-4923-8fc7-30df59f473f5",
+					"id": "aecbdb7e-2ffb-417e-9ef9-479a4a5afe5e",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1106,14 +1106,14 @@
 					"response": []
 				}
 			],
-			"id": "de631470-33e7-4c89-81db-f14444f7f715"
+			"id": "294b6d99-76bc-4d7c-8ba4-2ca06abcc719"
 		}
 	],
 	"event": [
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "f9258000-e03b-42e0-b046-83f2913100f9",
+				"id": "96e14841-d5e0-46f2-a772-88e9e0093839",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -1123,7 +1123,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "fce1bf72-340d-413b-8031-03552ba38789",
+				"id": "8d5aa781-614e-4805-b22a-e8450ffcf568",
 				"type": "text/javascript",
 				"exec": [
 					""
